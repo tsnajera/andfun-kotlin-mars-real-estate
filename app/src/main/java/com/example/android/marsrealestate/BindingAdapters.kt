@@ -17,3 +17,23 @@
 
 package com.example.android.marsrealestate
 
+import android.widget.ImageView
+import androidx.core.net.toUri
+import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+
+// Image view param means only image views can use this function
+// This will be called from grid_view_item xml layout
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let { // Wrap in let for null uris
+        val imgUri = it.toUri().buildUpon().scheme("https").build() // Convert url to uri
+        Glide.with(imgView.context)
+                .load(imgUri)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.loading_animation)
+                        .error(R.drawable.ic_broken_image))
+                .into(imgView)
+    }
+}
