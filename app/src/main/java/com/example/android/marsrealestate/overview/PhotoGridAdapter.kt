@@ -28,7 +28,7 @@ import com.example.android.marsrealestate.network.MarsProperty
 // Create adapter class to bind data to our recyclerview
 // We are extending RecyclerView ListAdapter
 // So we pass in list item type (MarsProperty), the viewholder(MarsPropertyViewHolder) and a DiffUtil item callback impl (DiffCallback)
-class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback){
+class PhotoGridAdapter(private val onClickListener: OnClickListener) : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback){
 
     // This is our viewholder that extends RecyclerView.ViewHolder
     // Pass in binding object from gridview layout to bind our mars property to xml layout
@@ -69,6 +69,14 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
     // This method actually binds the current mars property to the viewholder
     override fun onBindViewHolder(holder: PhotoGridAdapter.MarsPropertyViewHolder, position: Int) {
         val marsProperty = getItem(position)
+        holder.itemView.setOnClickListener{
+            onClickListener.onClick(marsProperty)
+        }
         holder.bind(marsProperty)
     }
+
+    class OnClickListener(val clickListener: (marsProperty: MarsProperty) -> Unit) {
+        fun onClick(marsProperty:MarsProperty) = clickListener(marsProperty)
+    }
+
 }
